@@ -1,0 +1,83 @@
+100 REM BASIC Week 2: Halloween Boogaloo
+110 REM http://reddit.com/r/RetroBattlestations
+120 REM written by FozzTexx
+130 REM Apple II port by FozzTexx
+140 REM ----
+200 REM Clear screen and setup variables
+210 HOME
+220 SC = 40:SR = 24
+230 DL = 300:REM Delay between redrawing
+300 REM Load background and draw on screen
+310 NR = 0:WD = 0
+320 READ T$,S$:IF T$ <> "BG" THEN GOTO 350
+330 NR = NR + 1:IF LEN(S$) > WD THEN WD = LEN(S$)
+340 GOTO 320
+350 RESTORE
+360 XF = 2:KF = XF + WD:IF RND(1) > .5 THEN XF = SC - WD - 2:KF = 0
+370 YF = SR - NR:X = XF:KW = SC - WD - 4
+380 FOR I = 1 TO NR
+390 READ T$,S$:Y = I + YF - 1:GOSUB 1010:PRINT S$;
+400 NEXT I
+500 REM Load sprites into variables
+510 GOSUB 1510:BT$(0) = SP$
+520 GOSUB 1510:BT$(1) = SP$
+530 GOSUB 1510:WT$ = SP$
+600 REM Animation
+610 NB = 3
+620 FOR I = 1 TO NB
+630 BX(I) = INT(RND(1) * (KW - 3)):BY(I) = INT(RND(1) * ((SR - 4 - NR / 2) / NB)) * NB + I + 1
+640 BW(I) = INT(RND(1) * 2):BF(I) = INT(RND(1) * 9)
+650 NEXT I
+660 FOR I = 1 TO NB
+670 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
+680 X = X + BX(I) + KF :Y = Y + BY(I):GOSUB 1010:PRINT "   "
+710 BW(I) = BW(I) + 1:IF BW(I) > 1 THEN BW(I) = 0
+720 BF(I) = INT(RND(1) * 9)
+730 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
+740 X = X + BX(I) + KF :Y = Y + BY(I):SP$ = BT$(BW(I)):GOSUB 2010
+750 NEXT I
+760 FOR I = 1 to DL:NEXT I
+770 GOTO 660
+999 END
+1000 REM Position cursor at X,Y
+1010 VTAB Y+1:HTAB X+1:RETURN
+1500 REM Load a sprite from DATA into a string
+1510 SP$ = "":SL = 0
+1520 READ T$,S$:IF LEN(SP$) > 0 THEN SP$ = SP$ + CHR$(13)
+1530 SP$ = SP$ + S$:SL = SL + 1
+1540 IF T$ = "SE" THEN RETURN
+1550 GOTO 1520
+2000 REM Draw sprite in SP$ at X,Y
+2010 SE = 1:SB = 1
+2020 IF ASC(MID$(SP$, SE)) = 13 THEN GOTO 2040
+2030 SE = SE + 1:IF SE <= LEN(SP$) THEN GOTO 2020
+2040 GOSUB 1010
+2050 PRINT MID$(SP$, SB, SE - SB);
+2060 IF SE >= LEN(SP$) THEN RETURN
+2070 IF ASC(MID$(SP$, SE)) = 13 THEN SE = SE +  1
+2080 SB = SE:Y = Y + 1:GOTO 2020
+5000 DATA BG,"        ^"
+5010 DATA BG,"       / \"
+5020 DATA BG,"      //|\\"
+5030 DATA BG,"     / -+- \"
+5040 DATA BG,"    /  \|/  \"
+5050 DATA BG,"   /_________\"
+5060 DATA BG,"     | ___ |"
+5070 DATA BG,"     || | ||::::"
+5080 DATA BG,"   /\ |-+-||IIII"
+5090 DATA BG,"  /  \| | ||    \"
+5100 DATA BG," / [] \_|_||_____"
+5110 DATA BG,"/_____     | +-+|"
+5120 DATA BG,"  |   +--+ | |+||"
+5130 DATA BG,"  |   |  | | +-+|"
+5140 DATA BG,"  |   |o | |____|"
+5150 DATA BG,"  |___|__|_|"
+5160 DATA SE,"^v^"
+5170 DATA SE,"-v-"
+5180 DATA SP,"     ,"
+5190 DATA SP,"   _/(_"
+5200 DATA SP,"   {\\"
+5210 DATA SP,"   /;_)"
+5220 DATA SP,"=='/ <===<<<"
+5230 DATA SP,"   \__\"
+5240 DATA SE,"     ``"
