@@ -15,9 +15,9 @@
 500 REM Load sprites into variables
 510 GOSUB 1510:BT$(0) = SP$:BE$ = SE$
 520 GOSUB 1510:BT$(1) = SP$
-530 GOSUB 1510:WT$ = SP$:WE$ = SE$
+530 GOSUB 1510:WT$ = SP$:WE$ = SE$:WW = SC
 600 REM Animation
-610 NB = 3
+610 NB = 3:WX = CL - WW - 1
 620 FOR I = 1 TO NB
 630 BX(I) = INT(RND(1) * (KW - 3)):BY(I) = INT(RND(1) * ((RW - 4 - NR / 2) / NB)) * NB + I + 1
 640 BW(I) = INT(RND(1) * 2):BF(I) = INT(RND(1) * 9)
@@ -30,7 +30,8 @@
 730 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
 740 X = X + BX(I) + KF :Y = Y + BY(I):SP$ = BT$(BW(I)):GOSUB 2010
 750 NEXT I
-760 GOTO 660
+760 IF WX >= 0 THEN SP$ = WT$:X = WX:Y = 0:GOSUB 2010:WX = WX - 1
+770 GOTO 660
 999 END
 1000 REM Position cursor at X,Y
 1010 VTAB Y+1:HTAB X+1
@@ -45,9 +46,10 @@
 1570 RETURN
 2000 REM Draw sprite in SP$ at X,Y
 2010 GOSUB 1010
-2020 POKE 32,X:PRINT SP$;
-2030 POKE 32,0
-2040 RETURN
+2020 REM Set the left margin to the X position
+2030 POKE 32,X:PRINT SP$;
+2040 POKE 32,0
+2050 RETURN
 5000 DATA SP,"        ^"
 5010 DATA SP,"       / \"
 5020 DATA SP,"      //|\\"
@@ -66,10 +68,10 @@
 5150 DATA SE,"  |___|__|_|"
 5160 DATA SE,"^v^"
 5170 DATA SE,"-v-"
-5180 DATA SP,"     ,"
-5190 DATA SP,"   _/(_"
-5200 DATA SP,"   {\\"
-5210 DATA SP,"   /;_)"
-5220 DATA SP,"=='/ <===<<<"
-5230 DATA SP,"   \__\"
-5240 DATA SE,"     ``"
+5180 DATA SP,"     , "
+5190 DATA SP,"   _/(_ "
+5200 DATA SP,"   {\\ "
+5210 DATA SP,"   /;_) "
+5220 DATA SP,"=='/ <===<<< "
+5230 DATA SP,"   \__\ "
+5240 DATA SE,"     `` "
