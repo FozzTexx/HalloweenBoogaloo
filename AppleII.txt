@@ -6,7 +6,6 @@
 200 REM Clear screen and setup variables
 210 HOME
 220 CL = 40:RW = 24:REM Columns and Rows of screen
-230 DL = 100:REM Delay between redrawing
 300 REM Load background and draw on screen
 310 GOSUB 1510
 320 NR = SR:WD = SC
@@ -14,9 +13,9 @@
 340 Y = RW - NR:KW = CL - WD - 4
 350 GOSUB 2010
 500 REM Load sprites into variables
-510 GOSUB 1510:BT$(0) = SP$
+510 GOSUB 1510:BT$(0) = SP$:BE$ = SE$
 520 GOSUB 1510:BT$(1) = SP$
-530 GOSUB 1510:WT$ = SP$
+530 GOSUB 1510:WT$ = SP$:WE$ = SE$
 600 REM Animation
 610 NB = 3
 620 FOR I = 1 TO NB
@@ -25,14 +24,13 @@
 650 NEXT I
 660 FOR I = 1 TO NB
 670 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
-680 X = X + BX(I) + KF :Y = Y + BY(I):GOSUB 1010:PRINT "   ";
+680 X = X + BX(I) + KF :Y = Y + BY(I):SP$ = BE$:GOSUB 2010
 710 BW(I) = BW(I) + 1:IF BW(I) > 1 THEN BW(I) = 0
 720 BF(I) = INT(RND(1) * 9)
 730 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
 740 X = X + BX(I) + KF :Y = Y + BY(I):SP$ = BT$(BW(I)):GOSUB 2010
 750 NEXT I
-760 FOR I = 1 to DL:NEXT I
-770 GOTO 660
+760 GOTO 660
 999 END
 1000 REM Position cursor at X,Y
 1010 VTAB Y+1:HTAB X+1
@@ -41,8 +39,10 @@
 1510 SP$ = "":SR = 0:SC = 0
 1520 READ T$,S$:IF LEN(SP$) > 0 THEN SP$ = SP$ + CHR$(13)
 1530 SP$ = SP$ + S$:SR = SR + 1:IF LEN(S$) > SC THEN SC = LEN(S$)
-1540 IF T$ = "SE" THEN RETURN
-1550 GOTO 1520
+1540 IF T$ <> "SE" THEN GOTO 1520
+1550 S$ = "":FOR I = 1 TO SC:S$ = S$ + " ":NEXT I
+1560 SE$ = S$:FOR I = 2 TO SR:SE$ = SE$ + CHR$(13) + S$:NEXT I
+1570 RETURN
 2000 REM Draw sprite in SP$ at X,Y
 2010 GOSUB 1010
 2020 POKE 32,X:PRINT SP$;

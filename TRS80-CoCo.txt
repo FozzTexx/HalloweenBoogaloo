@@ -7,7 +7,6 @@
 210 CLEAR 1500:REM CoCo needs room for strings
 220 CLS
 230 CL = 32:RW = 16:REM Columns and Rows of screen
-240 DL = 100:REM Delay between redrawing
 300 REM Load background and draw on screen
 310 GOSUB 1510
 320 NR = SR:WD = SC
@@ -32,8 +31,7 @@
 730 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
 740 X = X + BX(I) + KF :Y = Y + BY(I):SP$ = BT$(BW(I)):GOSUB 2010
 750 NEXT I
-760 FOR I = 1 TO DL:NEXT I
-770 GOTO 660
+760 GOTO 660
 999 END
 1000 REM Position cursor at X,Y
 1010 PRINT @ Y * CL + X,;
