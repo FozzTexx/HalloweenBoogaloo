@@ -9,14 +9,14 @@
 230 CL = 32:RW = 16:REM Columns and Rows of screen
 300 REM Load background and draw on screen
 310 GOSUB 1510
-320 NR = SR:WD = SC
+320 NR = SR:WD = SC:WX = -2
 330 X = 2:KF = X + WD:IF RND(2) > 1 THEN X = CL - WD - 2:KF = 0
 340 Y = RW - NR:KW = CL - WD - 4
 350 GOSUB 2010
 500 REM Load sprites into variables
-510 GOSUB 1510:BT$(0) = SP$
+510 GOSUB 1510:BT$(0) = SP$:BE$ = SE$:BC = SC
 520 GOSUB 1510:BT$(1) = SP$
-530 GOSUB 1510:WT$ = SP$
+530 GOSUB 1510:WT$ = SP$:WE$ = SE$:WW = SC:WH = SR
 600 REM Animation
 610 NB = 3
 620 FOR I = 1 TO NB
@@ -25,7 +25,7 @@
 650 NEXT I
 660 FOR I = 1 TO NB
 670 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
-680 X = X + BX(I) + KF :Y = Y + BY(I):GOSUB 1010:PRINT "   ";
+680 X = X + BX(I) + KF :Y = Y + BY(I):SP$ = BE$:GOSUB 2010
 710 BW(I) = BW(I) + 1:IF BW(I) > 1 THEN BW(I) = 0
 720 BF(I) = RND(9)
 730 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
@@ -33,18 +33,20 @@
 750 NEXT I
 760 IF WX = -1 THEN SP$ = WE$:X = 0:Y = 0:GOSUB 2010:WX = -2
 770 IF WX >= 0 THEN SP$ = WT$:X = WX:Y = 0:GOSUB 2010:WX = WX - 1
-780 IF WX = -2 AND WH + NR < RW AND RND(1) * 100 < 2 THEN WX = CL - WW - 1
+780 IF WX = -2 AND WH + NR < RW AND RND(100) < 3 THEN WX = CL - WW - 1
 790 GOTO 660
-999 END
 1000 REM Position cursor at X,Y
 1010 PRINT @ Y * CL + X,;
 1020 RETURN
 1500 REM Load a sprite from DATA into a string
-1510 SP$ = "":SR = 0:SC = 0
+1510 SP$ = "":SE$ = "":SR = 0:SC = 0
 1520 READ T$,S$:IF LEN(SP$) > 0 THEN SP$ = SP$ + CHR$(13)
 1530 SP$ = SP$ + S$:SR = SR + 1:IF LEN(S$) > SC THEN SC = LEN(S$)
-1540 IF T$ = "SE" THEN RETURN
-1550 GOTO 1520
+1540 BL$ = "":FOR I = 1 TO LEN(S$):BL$ = BL$ + " ":NEXT I
+1550 IF LEN(SE$) > 0 THEN SE$ = SE$ + CHR$(13)
+1560 SE$ = SE$ + BL$
+1570 IF T$ <> "SE" THEN GOTO 1520
+1580 RETURN
 2000 REM Draw sprite in SP$ at X,Y
 2010 SE = 1:SB = 1
 2020 SE = INSTR(SB, SP$, CHR$(13))

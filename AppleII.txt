@@ -8,18 +8,18 @@
 220 CL = 40:RW = 24:REM Columns and Rows of screen
 300 REM Load background and draw on screen
 310 GOSUB 1510
-320 NR = SR:WD = SC
+320 NR = SR:WD = SC:WX = -2
 330 X = 2:KF = X + WD:IF RND(1) > .5 THEN X = CL - WD - 2:KF = 0
 340 Y = RW - NR:KW = CL - WD - 4
 350 GOSUB 2010
 500 REM Load sprites into variables
-510 GOSUB 1510:BT$(0) = SP$:BE$ = SE$
+510 GOSUB 1510:BT$(0) = SP$:BE$ = SE$:BC = SC
 520 GOSUB 1510:BT$(1) = SP$
 530 GOSUB 1510:WT$ = SP$:WE$ = SE$:WW = SC:WH = SR
 600 REM Animation
 610 NB = 3:WX = -2
 620 FOR I = 1 TO NB
-630 BX(I) = INT(RND(1) * (KW - 3)):BY(I) = INT(RND(1) * ((RW - 4 - NR / 2) / NB)) * NB + I + 1
+630 BX(I) = INT(RND(1) * (KW - BC)):BY(I) = INT(RND(1) * ((RW - 4 - NR / 2) / NB)) * NB + I + 1
 640 BW(I) = INT(RND(1) * 2):BF(I) = INT(RND(1) * 9)
 650 NEXT I
 660 FOR I = 1 TO NB
@@ -34,7 +34,6 @@
 770 IF WX >= 0 THEN SP$ = WT$:X = WX:Y = 0:GOSUB 2010:WX = WX - 1
 780 IF WX = -2 AND WH + NR < RW AND RND(1) * 100 < 2 THEN WX = CL - WW - 1
 790 GOTO 660
-999 END
 1000 REM Position cursor at X,Y
 1010 VTAB Y+1:HTAB X+1
 1020 RETURN
