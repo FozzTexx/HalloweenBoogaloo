@@ -29,10 +29,10 @@
 720 BF(I) = INT(RND(1) * 9)
 730 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
 740 X = X + BX(I) + KF :Y = Y + BY(I):SP$ = BT$(BW(I)):GOSUB 2010
-750 NEXT I
-760 IF WX = -1 THEN SP$ = WE$:X = 0:Y = 0:GOSUB 2010:WX = -2
-770 IF WX >= 0 THEN SP$ = WT$:X = WX:Y = 0:GOSUB 2010:WX = WX - 1
-780 IF WX = -2 AND WH + NR < RW AND RND(1) * 100 < 2 THEN WX = CL - WW - 1
+750 IF WX = -1 THEN SP$ = WE$:X = 0:Y = 0:GOSUB 2010:WX = -2
+760 IF WX >= 0 THEN SP$ = WT$:X = WX:Y = 0:GOSUB 2010:WX = WX - 1
+770 IF WX = -2 AND WH + NR < RW AND RND(1) * 50 < 2 THEN WX = CL - WW - 1
+780 NEXT I
 790 GOTO 660
 1000 REM Position cursor at X,Y
 1010 VTAB Y+1:HTAB X+1
