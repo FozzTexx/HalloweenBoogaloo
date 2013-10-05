@@ -1,0 +1,50 @@
+100 REM BASIC Week 2: Halloween Boogaloo
+110 REM http://reddit.com/r/RetroBattlestations
+120 REM written by FozzTexx
+130 REM Aquarius port started by FozzTexx
+140 REM ----
+150 REM You probably don't want to type any REM statements or spaces
+160 REM in order to conserve as much of the RAM as possible
+170 REM ----
+200 REM Clear screen and setup variables
+210 PRINT CHR$(11);
+220 CL = 40:RW = 24
+300 REM Skip background but setup variables it would have used
+320 NR = RW:KW = CL:KF = 0
+500 REM Load sprites into variables
+510 GOSUB 1510:BT$(0) = SP$:BE$ = SE$:BC = SC
+520 GOSUB 1510:BT$(1) = SP$
+610 NB = 3:WX = -2
+620 FOR I = 1 TO NB
+630 BX(I) = INT(RND(1) * (KW - BC)):BY(I) = INT(RND(1) * ((RW - 4 - NR / 2) / NB)) * NB + I + 1
+640 BW(I) = INT(RND(1) * 2):BF(I) = INT(RND(1) * 9)
+650 NEXT I
+660 FOR I = 1 TO NB
+670 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
+680 X = X + BX(I) + KF :Y = Y + BY(I):SP$ = BE$:GOSUB 2010
+710 BW(I) = BW(I) + 1:IF BW(I) > 1 THEN BW(I) = 0
+720 BF(I) = INT(RND(1) * 9)
+730 Y = INT(BF(I) / 3):X = INT((BF(I) / 3 - Y) * 3 + .05)
+740 X = X + BX(I) + KF :Y = Y + BY(I):SP$ = BT$(BW(I)):GOSUB 2010
+780 NEXT I
+790 GOTO 660
+1000 REM Position cursor at X,Y
+1010 M = Y * CL + X:M = M + 12328
+1020 M1 = M / 256:M2 = M - INT(M1) * 256
+1030 POKE 14337,M2:POKE 14338,M1:POKE 14336,X
+1050 RETURN
+1500 REM Load a sprite from DATA into a string
+1510 SP$ = "":SE$ = "":SR = 0:SC = 0
+1520 READ T$,S$:IF LEN(SP$) > 0 THEN SP$ = SP$ + CHR$(13)
+1530 SP$ = SP$ + S$:SR = SR + 1:IF LEN(S$) > SC THEN SC = LEN(S$)
+1540 BL$ = "":FOR I = 1 TO LEN(S$):BL$ = BL$ + " ":NEXT I
+1550 IF LEN(SE$) > 0 THEN SE$ = SE$ + CHR$(13)
+1560 SE$ = SE$ + BL$
+1570 IF T$ <> "SE" THEN GOTO 1520
+1580 RETURN
+2000 REM Draw sprite in SP$ at X,Y
+2010 GOSUB 1010
+2020 PRINT SP$:REM No multiline sprites right now
+2030 RETURN
+5160 DATA SE,"^v^"
+5170 DATA SE,"-v-"
