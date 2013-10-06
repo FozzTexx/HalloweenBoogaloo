@@ -4,7 +4,7 @@
 130 REM Atari 8-bit port by Gibstov
 140 REM ----
 150 REM Dimension strings
-160 DIM SP$(254),BE$(8),WT$(128),WE$(128),SE$(254),BT0$(8),BT1$(8),T$(2),S$(20),BL$(30)
+160 DIM SP$(264),BE$(8),WT$(128),WE$(128),SE$(264),BT0$(8),BT1$(8),T$(2),S$(20),BL$(30)
 170 DIM BX(3),BY(3),BW(3),BF(3)
 200 REM Clear screen and setup variables
 210 PRINT CHR$(125):POKE 752,1
@@ -46,6 +46,7 @@
 1500 REM Load a sprite from DATA into a string
 1510 SP$ = "":SE$ = "":SR = 0:SC = 0
 1520 READ T$,S$:IF LEN(SP$) > 0 THEN SP$(LEN(SP$) + 1) = CHR$(155)
+1525 S$(LEN(S$)+1) = " "
 1530 SP$(LEN(SP$)+1) = S$:SR = SR + 1:IF LEN(S$) > SC THEN SC = LEN(S$)
 1540 BL$ = "":FOR I = 1 TO LEN(S$):BL$(LEN(BL$) + 1) = " ":NEXT I
 1550 IF LEN(SE$) > 0 THEN SE$(LEN(SE$) + 1) = CHR$(155)
@@ -76,10 +77,10 @@
 5150 DATA SE,  |___|__|_|
 5160 DATA SE,^v^
 5170 DATA SE,-v-
-5180 DATA SP,     ^ 
-5190 DATA SP,   _/(_ 
-5200 DATA SP,   <\\ 
-5210 DATA SP,   /;_) 
-5220 DATA SP,=='/ <===<<< 
-5230 DATA SP,   \__\ 
+5180 DATA SP,     ^
+5190 DATA SP,   _/(_
+5200 DATA SP,   <\\
+5210 DATA SP,   /;_)
+5220 DATA SP,=='/ <===<<<
+5230 DATA SP,   \__\
 5240 DATA SE,     ''
