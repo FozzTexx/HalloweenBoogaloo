@@ -5,6 +5,10 @@ flavors. The "graphics" are character based and have some simple
 sprites. It should be portable to any BASIC that has the ability to
 position the cursor at a specific location.
 
+Don't have a retro computer and don't want to figure out how to setup
+an emulator? Try the Apple II version in your browser:
+http://retrobattlestations.com/AppleII/HalloweenBoogaloo.shtml
+
 === Typing Tips ===
 When typing the program in you can leave off any lines which contain
 REM, they are not needed for the program to run. You can also leave
