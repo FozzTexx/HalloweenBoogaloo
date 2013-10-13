@@ -1,0 +1,105 @@
+100 REM BASIC Week 2: Halloween Boogaloo
+110 REM http://reddit.com/r/RetroBattlestations
+120 REM written by FozzTexx
+130 REM TI-99/4A port by floodrouting
+140 REM ----
+200 REM Clear screen and setup variables
+210 CALL CLEAR::CALL SCREEN(9)
+215 GOSUB 6010
+220 CL = 28+4*ME::RW = 24::REM Columns and Rows of screen
+230 RANDOMIZE
+300 REM Load background and draw on screen
+310 GOSUB 1510
+320 NR = SR::WD = SC::WX = -2
+330 X = 2::KF = X + WD::IF RND > .5 THEN X = CL - WD - 2::KF = 0
+340 Y = RW - NR::KW = CL - WD - 4
+350 GOSUB 2010
+500 REM Load sprites into variables
+510 GOSUB 1510::BT$(0) = SP$::BE$ = SE$::BC = SC
+520 GOSUB 1510::BT$(1) = SP$
+530 GOSUB 1510::WT$ = SP$::WE$ = SE$::WW = SC::WH = SR
+600 REM Animation
+610 NB = 3::WX = -2
+620 FOR I = 1 TO NB
+630 BX(I) = INT(RND * (KW - BC))::BY(I) = INT(RND * ((RW - 4 - NR / 2) / NB)) * NB + I + 1
+640 BW(I) = INT(RND * 2)::BF(I) = INT(RND * 9)
+650 NEXT I
+660 FOR I = 1 TO NB
+670 Y = INT(BF(I) / 3)::X = INT((BF(I) / 3 - Y) * 3 + .05)
+680 X = X + BX(I) + KF ::Y = Y + BY(I)::SP$ = BE$::GOSUB 2010
+710 BW(I) = BW(I) + 1::IF BW(I) > 1 THEN BW(I) = 0
+720 BF(I) = INT(RND * 9)
+730 Y = INT(BF(I) / 3)::X = INT((BF(I) / 3 - Y) * 3 + .05)
+740 X = X + BX(I) + KF ::Y = Y + BY(I)::SP$ = BT$(BW(I))::GOSUB 2010
+750 IF WX = -1 THEN SP$ = WE$::X = 0::Y = 0::GOSUB 2010::WX = -2
+760 IF WX >= 0 THEN SP$ = WT$::X = WX::Y = 0::GOSUB 2010::WX = WX - 1
+770 IF WX = -2 AND WH + NR < RW AND RND * 50 < 2 THEN WX = CL - WW - 1
+780 NEXT I
+790 GOTO 660
+1500 REM Load a sprite from DATA into a string
+1510 SP$ = ""::SE$ = ""::SR = 0::SC = 0
+1520 READ T$,S$::IF LEN(SP$) > 0 THEN SP$ = SP$ & CHR$(13)
+1530 SP$ = SP$ & S$::SR = SR + 1::IF LEN(S$) > SC THEN SC = LEN(S$)
+1550 IF LEN(SE$) > 0 THEN SE$ = SE$ & CHR$(13)
+1560 SE$ = SE$ & RPT$(" ",LEN(S$))
+1570 IF T$ <> "SE" THEN GOTO 1520
+1580 RETURN
+2000 REM Draw sprite in SP$ at X,Y
+2010 IF ME THEN CALL LINK("DRAWSP",X,Y,SP$)::RETURN
+2015 SB = 1
+2020 SE = POS(SP$, CHR$(13), SB)
+2030 IF SE = 0 THEN SE = LEN(SP$) + 1
+2040 SS$ = SEG$(SP$, SB, SE - SB)
+2050 DISPLAY AT(1+Y,1+X) SIZE(LEN(SS$)):SS$
+2060 IF SE >= LEN(SP$) THEN RETURN
+2080 SB = SE + 1::Y = Y + 1::GOTO 2020
+5000 DATA SP,"        ^"
+5010 DATA SP,"       / \"
+5020 DATA SP,"      //|\\"
+5030 DATA SP,"     / -+- \"
+5040 DATA SP,"    /  \|/  \"
+5050 DATA SP,"   /_________\"
+5060 DATA SP,"     | ___ |"
+5070 DATA SP,"     || | ||::::"
+5080 DATA SP,"   /\ |-+-||IIII"
+5090 DATA SP,"  /  \|_|_||    \"
+5100 DATA SP," / [] \    |_____"
+5110 DATA SP,"/_____     | +-+|"
+5120 DATA SP,"  |   +--+ | |+||"
+5130 DATA SP,"  |   |  | | +-+|"
+5140 DATA SP,"  |   |o | |____|"
+5150 DATA SE,"  |___|__|_|"
+5160 DATA SE,"^v^"
+5170 DATA SE,"-v-"
+5180 DATA SP,"     , "
+5190 DATA SP,"   _/(_ "
+5200 DATA SP,"   {\\ "
+5210 DATA SP,"   /;_) "
+5220 DATA SP,"=='/ <===<<< "
+5230 DATA SP,"   \__\ "
+5240 DATA SE,"     `` "
+6000 REM Load asm routine if 32K memory expansion is available
+6010 ON ERROR 6240
+6020 CALL INIT
+6030 CALL LOAD(9728, 194, 139, 6, 160, 31, 46, 192, 96)
+6040 CALL LOAD(9736, 131, 78, 6, 193, 215, 193, 6, 193)
+6050 CALL LOAD(9744, 215, 193, 2, 2, 39, 0, 194, 96)
+6060 CALL LOAD(9752, 131, 80, 16, 3, 220, 175, 251, 254)
+6070 CALL LOAD(9760, 6, 9, 22, 252, 194, 96, 131, 80)
+6080 CALL LOAD(9768, 6, 160, 31, 46, 192, 96, 131, 78)
+6090 CALL LOAD(9776, 4, 200, 210, 33, 0, 1, 8, 56)
+6100 CALL LOAD(9784, 6, 160, 31, 46, 192, 96, 131, 78)
+6110 CALL LOAD(9792, 209, 225, 0, 1, 8, 135, 162, 7)
+6120 CALL LOAD(9800, 4, 193, 2, 2, 39, 0, 2, 104)
+6130 CALL LOAD(9808, 64, 0, 6, 200, 215, 200, 6, 200)
+6140 CALL LOAD(9816, 215, 200, 194, 73, 16, 9, 208, 114)
+6150 CALL LOAD(9824, 2, 129, 13, 0, 19, 7, 2, 33)
+6160 CALL LOAD(9832, 96, 0, 219, 193, 255, 254, 6, 9)
+6170 CALL LOAD(9840, 22, 246, 6, 154, 6, 9, 2, 40)
+6180 CALL LOAD(9848, 0, 32, 16, 235)
+6190 CALL LOAD(16376,ASC("D"),ASC("R"),ASC("A"),ASC("W"),ASC("S"),ASC("P"),38,0)
+6200 CALL LOAD(8196,63,248)
+6210 ME=1
+6220 ON ERROR STOP
+6230 RETURN
+6240 RETURN 6230
