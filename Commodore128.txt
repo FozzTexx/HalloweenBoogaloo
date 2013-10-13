@@ -1,0 +1,85 @@
+100 rem basic week 2: halloween boogaloo
+110 rem http://reddit.com/r/retrobattlestations
+120 rem written by fozztexx
+130 rem commodore 128 port by rolandjuno 2013-10-13
+140 rem ----
+200 rem clear screen and setup variables
+210 print chr$(147)chr$(5):poke53280,12:poke53281,0
+220 cl = 40:rw = 24:rem columns and rows of screen
+230 m=abs(peek(65533)=255)+abs(peek(215)=128)
+240 if m=0 then print "sorry, this is the c128 version.":end
+250 if m=2 then cl=80:fast:rem 80 column mode
+300 rem load background and draw on screen
+310 gosub 1510
+320 nr = sr:wd = sc:wx = -2
+330 x = 2:kf = x + wd:if rnd(1) > .5 then x = cl - wd - 2:kf = 0
+340 y = rw - nr:kw = cl - wd - 4
+350 gosub 2010
+500 rem load sprites into variables
+510 gosub 1510:bt$(0) = sp$:be$ = se$:bc = sc
+520 gosub 1510:bt$(1) = sp$
+530 gosub 1510:wt$ = sp$:we$ = se$:ww = sc:wh = sr
+600 rem animation
+610 nb = 3:wx = -2
+620 for i = 1 to nb
+630 bx(i)=int(rnd(1)*(kw-bc)):by(i)=int(rnd(1)*((rw-4-nr/2)/nb))*nb+i+1
+640 bw(i) = int(rnd(1) * 2):bf(i) = int(rnd(1) * 9)
+650 next i
+660 for i = 1 to nb
+670 y = int(bf(i) / 3):x = int((bf(i) / 3 - y) * 3 + .05)
+680 x = x + bx(i) + kf :y = y + by(i):sp$ = be$:gosub 2010
+710 bw(i) = bw(i) + 1:if bw(i) > 1 then bw(i) = 0
+720 bf(i) = int(rnd(1) * 9)
+730 y = int(bf(i) / 3):x = int((bf(i) / 3 - y) * 3 + .05)
+740 x = x + bx(i) + kf :y = y + by(i):sp$ = bt$(bw(i)):gosub 2010
+750 if wx = -1 then sp$ = we$:x = 0:y = 0:gosub 2010:wx = -2
+760 if wx >= 0 then sp$ = wt$:x = wx:y = 0:gosub 2010:wx = wx - 1
+770 if wx = -2 and wh + nr < rw and rnd(1) * 50 < 2 then wx = cl - ww - 1
+780 next i
+790 goto 660
+1000 rem position cursor at x,y
+1010 sys65520,,y,x
+1020 return
+1500 rem load a sprite from data into a string
+1510 sp$ = "":se$ = "":sr = 0:sc = 0
+1520 read t$,s$:if len(sp$) > 0 then sp$ = sp$ + chr$(13)
+1530 sp$ = sp$ + s$:sr = sr + 1:if len(s$) > sc then sc = len(s$)
+1540 bl$ = "":for i = 1 to len(s$):bl$ = bl$ + " ":next i
+1550 if len(se$) > 0 then se$ = se$ + chr$(13)
+1560 se$ = se$ + bl$
+1570 if t$ <> "se" then goto 1520
+1580 return
+2000 rem draw sprite in sp$ at x,y
+2010 se = 1:sb = 1
+2020 se = instr(sp$, chr$(13), sb)
+2030 if se = 0 then se = len(sp$) + 1
+2040 gosub 1010
+2050 print mid$(sp$, sb, se - sb);
+2060 if se >= len(sp$) then return
+2070 se = se +  1
+2080 sb = se:y = y + 1:goto 2020
+5000 data sp,"        ^"
+5010 data sp,"       N M"
+5020 data sp,"      NNBMM"
+5030 data sp,"     N -+- M"
+5040 data sp,"    N  MBN  M"
+5050 data sp,"   NRRRRRRRRRM"
+5060 data sp,"     B RRR B"
+5070 data sp,"     BB B BB::::"
+5080 data sp,"   NM B-+-BBiiii"
+5090 data sp,"  N  MBRBRBB    M"
+5100 data sp," N [] M    BRRRRR"
+5110 data sp,"NRRRRR     B +-+B"
+5120 data sp,"  B   +--+ B B+BB"
+5130 data sp,"  B   B  B B +-+B"
+5140 data sp,"  B   Bo B BRRRRB"
+5150 data se,"  BRRRBRRBRB"
+5160 data se,"JvK"
+5170 data se,"UvI"
+5180 data sp,"     , "
+5190 data sp,"   RN(R "
+5200 data sp,"   XMM "
+5210 data sp,"   N;R) "
+5220 data sp,"=='N <===<<< "
+5230 data sp,"   MRRM "
+5240 data se,"     `` "
